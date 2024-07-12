@@ -67,12 +67,14 @@ func (self *base[V]) bounds(value V, low int, high int, cmp Compare[V]) int {
 
 
 // Shared private method that searches for several values with in an array using an iterator. The location of previous
-// values are used to optimize the search for the next value. As consecutive values are likely to be in a similar
-// range, this algorithm will typically out perform the O(log n) complexity required to search for the values
-// individually.
+// values are used to optimize the search for the next value. As consecutive values are likely to be in a similar range,
+// this algorithm will typically out perform the O(log n) complexity required to search for the values individually.
+//
 //
 func (self *base[V]) traverse(values iter.Seq[V], cmp Compare[V]) iter.Seq2[int, V] {
-    low, idx, high := 0, 0, len(self.data) - 1
+    low, high := 0, len(self.data) - 1
+    idx := (low + high) / 2
+
     return func(yield func(int, V) bool) {
         for value := range values {
             size := len(self.data)
