@@ -253,6 +253,14 @@ func (self *FlatSet[V]) removeDuplicates() {
     }
 }
 
+
+// Make an empty FlatSet.
+//
+func MakeFlatSet[V any](cmp Compare[V]) FlatSet[V] {
+    return FlatSet[V]{base[V]{cmp: cmp}}
+}
+
+
 // Create a new empty FlatSet.
 //
 func NewFlatSet[V any](cmp Compare[V]) *FlatSet[V] {
@@ -417,6 +425,13 @@ func (self *FlatSet[V]) Difference(values iter.Seq[V]) *FlatSet[V] {
 //
 type FlatMultiSet[V any] struct {
    base[V]
+}
+
+
+// Make an empty FlatMultiSet.
+//
+func MakeFlatMultiSet[V any](cmp Compare[V]) FlatMultiSet[V] {
+    return FlatMultiSet[V]{base[V]{cmp: cmp}}
 }
 
 
