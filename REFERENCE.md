@@ -37,12 +37,12 @@ type FlatSet[V any] struct {
 
 A FlatSet is a sorted associative container of unique values using a comparison function.
 
-#### func  InitFlatSet
+#### func  MakeFlatSet
 
 ```go
-func InitFlatSet[V any](values []V, cmp Compare[V]) *FlatSet[V]
+func MakeFlatSet[V any](cmp Compare[V]) FlatSet[V]
 ```
-Create a new FlatSet and initialize it with some values. Values that are repeated will be discarded.
+Make an empty FlatSet.
 
 #### func  NewFlatSet
 
@@ -50,6 +50,13 @@ Create a new FlatSet and initialize it with some values. Values that are repeate
 func NewFlatSet[V any](cmp Compare[V]) *FlatSet[V]
 ```
 Create a new empty FlatSet.
+
+#### func  InitFlatSet
+
+```go
+func InitFlatSet[V any](values []V, cmp Compare[V]) *FlatSet[V]
+```
+Create a new FlatSet and initialize it with some values. Values that are repeated will be discarded.
 
 ### Methods
 
@@ -214,12 +221,12 @@ type FlatMultiSet[V any] struct {
 A FlatMultiSet is a sorted associative container of values using a comparison function. Unlike a FlatSet, a FlatMultiSet 
 allows equivalent values to be stored in the same container and order stability of these values is guaranteed.
 
-#### func  InitFlatMultiSet
+#### func  MakeFlatMultiSet
 
 ```go
-func InitFlatMultiSet[V any](values []V, cmp Compare[V]) *FlatMultiSet[V]
+func MakeFlatMultiSet[V any](cmp Compare[V]) FlatMultiSet[V]
 ```
-Create a new FlatMultiSet and initialize it with some values. The order of equivalent values will be maintained.
+Make an empty FlatMultiSet.
 
 #### func  NewFlatMultiSet
 
@@ -227,6 +234,13 @@ Create a new FlatMultiSet and initialize it with some values. The order of equiv
 func NewFlatMultiSet[V any](cmp Compare[V]) *FlatMultiSet[V]
 ```
 Create a new empty FlatMultiSet.
+
+#### func  InitFlatMultiSet
+
+```go
+func InitFlatMultiSet[V any](values []V, cmp Compare[V]) *FlatMultiSet[V]
+```
+Create a new FlatMultiSet and initialize it with some values. The order of equivalent values will be maintained.
 
 ### Methods
 
