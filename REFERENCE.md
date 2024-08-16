@@ -12,9 +12,7 @@ small, or if you frequently update the end of the flatset. For larger collection
 using a flatset of pointers to structures instead of values, although you must be careful not to modify the data inside 
 the flatset as it might affect how the data is sorted.
 
-This package requires 'range over functions' so for golang < 1.23 you must build your application with 
-'GOEXPERIMENT=rangefunc'.
-https://go.dev/wiki/RangefuncExperiment
+This package uses 'range over functions' so it requires golang >= 1.23
 
 ___
 
@@ -74,17 +72,17 @@ func (self *FlatSet) Size() int
 ```
 Returns the number of values stored in this container.
 
-#### func (*FlatSet) Values
+#### func (*FlatSet) All
 
 ```go
-func (self *FlatSet) Values() iter.Seq[V]
+func (self *FlatSet) All() iter.Seq[V]
 ```
 Returns an iterator that returns a copy of each value in order.
 
-#### func (*FlatSet) Reversed
+#### func (*FlatSet) Backward
 
 ```go
-func (self *FlatSet) Reversed() iter.Seq[V]
+func (self *FlatSet) Backward() iter.Seq[V]
 ```
 Returns an iterator that iterates in reverse order returning a copy of each value.
 
@@ -95,18 +93,18 @@ func (self *FlatSet) Contains(value V) bool
 ```
 Returns true if this container has this value or false if it does not.
 
-#### func (*FlatSet) Any
+#### func (*FlatSet) HasAny
 
 ```go
-func (self *FlatSet) Any(values iter.Seq[V]) bool
+func (self *FlatSet) HasAny(values iter.Seq[V]) bool
 ```
 This method takes an iterator and will returns true if any of these equivalent values are contained within this 
 container.
 
-#### func (*FlatSet) All
+#### func (*FlatSet) HasAll
 
 ```go
-func (self *FlatSet) All(values iter.Seq[V]) bool
+func (self *FlatSet) HasAll(values iter.Seq[V]) bool
 ```
 This method takes an iterator and returns true if this container is a superset of these values.
 
@@ -258,17 +256,17 @@ func (self *FlatMultiSet) Size() int
 ```
 Returns the number of values stored in this container.
 
-#### func (*FlatMultiSet) Values
+#### func (*FlatMultiSet) All
 
 ```go
-func (self *FlatMultiSet) Values() iter.Seq[V]
+func (self *FlatMultiSet) All() iter.Seq[V]
 ```
 Returns an iterator that returns a copy of each value in order.
 
-#### func (*FlatMultiSet) Reversed
+#### func (*FlatMultiSet) Backward
 
 ```go
-func (self *FlatMultiSet) Reversed() iter.Seq[V]
+func (self *FlatMultiSet) Backward() iter.Seq[V]
 ```
 Returns an iterator that iterates in reverse order returning a copy of each value.
 

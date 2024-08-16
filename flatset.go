@@ -10,8 +10,7 @@
 // by using a flatset of pointers to structures instead of values, although you must be careful not to modify the data
 // inside the flatset as it might affect how the data is sorted.
 //
-// This package requires 'range over functions' so for golang < 1.23 you must build your application with
-// 'GOEXPERIMENT=rangefunc'. https://go.dev/wiki/RangefuncExperiment
+// This package uses 'range over functions' so it requires golang >= 1.23
 //
 package flatset
 
@@ -153,7 +152,7 @@ func (self *base[V]) Size() int {
 
 // Returns an iterator that returns a copy of each value in order.
 //
-func (self *base[V]) Values() iter.Seq[V] {
+func (self *base[V]) All() iter.Seq[V] {
     return func(yield func(V) bool) {
         for i := 0; i < len(self.data); i++ {
             if !yield(self.data[i]) {
@@ -166,7 +165,7 @@ func (self *base[V]) Values() iter.Seq[V] {
 
 // Returns an iterator that iterates in reverse order returning a copy of each value.
 //
-func (self *base[V]) Reversed() iter.Seq[V] {
+func (self *base[V]) Backward() iter.Seq[V] {
     return func(yield func(V) bool) {
         for i := len(self.data) - 1; i >= 0; i-- {
             if !yield(self.data[i]) {
@@ -191,7 +190,7 @@ func (self *base[V]) Contains(value V) bool {
 // This method takes an iterator and will returns true if any of these equivalent values are contained within this
 // container.
 //
-func (self *base[V]) Any(values iter.Seq[V]) bool {
+func (self *base[V]) HasAny(values iter.Seq[V]) bool {
     size := len(self.data)
     for lb, value := range self.traverse(values, self.cmp) {
         if lb < size && !self.cmp(value, self.data[lb]) {
@@ -204,7 +203,7 @@ func (self *base[V]) Any(values iter.Seq[V]) bool {
 
 // This method takes an iterator and returns true if this container is a superset of these values.
 //
-func (self *base[V]) All(values iter.Seq[V]) bool {
+func (self *base[V]) HasAll(values iter.Seq[V]) bool {
    size := len(self.data)
    for lb, value := range self.traverse(values, self.cmp) {
         if lb >= size || self.cmp(value, self.data[lb]) {
