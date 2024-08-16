@@ -1,23 +1,11 @@
 package flatset
 
 import (
-    "iter"
     "math/rand"
+    "slices"
     "strings"
     "testing"
 )
-
-
-// There should be a std iter.Values function in golang >=1.23
-func values[T any](values []T) iter.Seq[T] {
-    return func(yield func(T) bool) {
-        for _, value := range values {
-            if !yield(value) {
-                break
-            }
-        }
-    }
-}
 
 
 func lessInt(lhs, rhs int) bool { return lhs < rhs }
@@ -167,18 +155,18 @@ func TestStableUniq(t *testing.T) {
 
     expected := []stableData {{1, 6}, {2, 2}, {4, 0}}
     i := 0
-    for actual := range fs.Values()  {
+    for actual := range fs.All()  {
         if expected[i] != actual {
             t.Errorf("InitFlatSet not stable expected(%+v), actual(%+v)", expected[i], actual)
         }
         i++
     }
 
-    fs.Update(values(stableUpdate))
+    fs.Update(slices.Values(stableUpdate))
 
     expected = []stableData {{1, 6}, {2, 2}, {3, 8}, {4, 0}, {5, 9}}
     i = 0
-    for actual := range fs.Values()  {
+    for actual := range fs.All()  {
         if expected[i] != actual {
             t.Errorf("FlatSet.Updated not stable expected(%+v), actual(%+v)", expected[i], actual)
         }
@@ -206,18 +194,18 @@ func TestStableMulti(t *testing.T) {
 
     expected := []stableData {{1, 6}, {2, 2}, {2, 4}, {2, 5}, {4, 0}, {4, 3}}
     i := 0
-    for actual := range fs.Values()  {
+    for actual := range fs.All()  {
         if expected[i] != actual {
             t.Errorf("InitFlatMultiSet not stable expected(%+v), actual(%+v)", expected[i], actual)
         }
         i++
     }
 
-    fs.Update(values(stableUpdate))
+    fs.Update(slices.Values(stableUpdate))
 
     expected = []stableData {{1, 6}, {2, 2}, {2, 4}, {2, 5}, {2, 10}, {3, 8}, {4, 0}, {4, 3}, {4, 7}, {5, 9}}
     i = 0
-    for actual := range fs.Values()  {
+    for actual := range fs.All()  {
         if expected[i] != actual {
             t.Errorf("FlatMultiSet.Update() not stable expected(%+v), actual(%+v)", expected[i], actual)
         }
@@ -236,7 +224,7 @@ func TestStableMulti(t *testing.T) {
 }
 
 
-// Test the Any/All/Union/Intersection/Difference methods of a FlatSet.
+// Test the HasAny/HasAll/Union/Intersection/Difference methods of a FlatSet.
 //
 func TestSetOperations(t *testing.T) {
     fs := InitFlatSet[int]([]int {2, 4, 5}, lessInt)
@@ -244,38 +232,38 @@ func TestSetOperations(t *testing.T) {
     has := []int {2, 4}
     other := []int {2, 3, 5, 6}
 
-    if fs.Any(values(one)) || !fs.Any(values(has)) || !fs.Any(values(other)) {
-        t.Errorf("FlatSet.Any() failed")
+    if fs.HasAny(slices.Values(one)) || !fs.HasAny(slices.Values(has)) || !fs.HasAny(slices.Values(other)) {
+        t.Errorf("FlatSet.HasAny() failed")
     }
 
-    if fs.All(values(one)) || !fs.All(values(has)) || fs.All(values(other)) {
+    if fs.HasAll(slices.Values(one)) || !fs.HasAll(slices.Values(has)) || fs.HasAll(slices.Values(other)) {
         t.Errorf("FlatSet.All() failed")
     }
 
-    fs2 := fs.Union(values(other))
+    fs2 := fs.Union(slices.Values(other))
     expected := []int {2, 3, 4, 5, 6}
     i := 0
-    for value := range fs2.Values() {
+    for value := range fs2.All() {
         if value != expected[i] {
             t.Errorf("FlatSet.Union() unexpected value")
         }
         i++
     }
 
-    fs2 = fs.Intersection(values(other))
+    fs2 = fs.Intersection(slices.Values(other))
     expected = []int {2, 5}
     i = 0
-    for value := range fs2.Values() {
+    for value := range fs2.All() {
         if value != expected[i] {
             t.Errorf("FlatSet.Intersection() unexpected value")
         }
         i++
     }
 
-    fs2 = fs.Difference(values(other))
+    fs2 = fs.Difference(slices.Values(other))
     expected = []int {4}
     i = 0
-    for value := range fs2.Values() {
+    for value := range fs2.All() {
         if value != expected[i] {
             t.Errorf("FlatSet.Difference() unexpected value")
         }
@@ -318,16 +306,16 @@ func TestPointerSet(t *testing.T) {
 
     fs := InitFlatSet[*person](originalMembers, comparePeople)
     fs.Remove(originalMembers[2])
-    fs.Update(values(otherMembers))
+    fs.Update(slices.Values(otherMembers))
     fs.Insert(&person{name: "Ronnie", age: 77})
 
     fs.Remove(originalMembers[3])
-    fs = fs.Difference(values(otherMembers))
+    fs = fs.Difference(slices.Values(otherMembers))
     fs.Remove(originalMembers[4])
 
     expected := [] person { {80, "Keith"}, {80, "Mick"}, {77, "Ronnie"}}
     i := 0
-    for value := range fs.Values() {
+    for value := range fs.All() {
         for *value != expected[i] {
             t.Errorf("TestPointerSet unexpected value")
         }
@@ -358,7 +346,7 @@ var bmInsertReversed = InitFlatSet(bmRandomInts, greaterInt)
 //
 func BenchmarkInsertEach(b *testing.B) {
     out := bmInit
-    for value := range values(bmRandomInts) {
+    for value := range slices.Values(bmRandomInts) {
         out.Insert(value)
     }
 }
@@ -368,7 +356,7 @@ func BenchmarkInsertEach(b *testing.B) {
 //
 func BenchmarkUpdateRandom(b *testing.B) {
     out := bmInit
-    out.Update(values(bmRandomInts))
+    out.Update(slices.Values(bmRandomInts))
 }
 
 
@@ -376,7 +364,7 @@ func BenchmarkUpdateRandom(b *testing.B) {
 //
 func BenchmarkUpdateForward(b *testing.B) {
     out := bmInit
-    out.Update(bmInsertForward.Values())
+    out.Update(bmInsertForward.All())
 }
 
 
@@ -384,7 +372,7 @@ func BenchmarkUpdateForward(b *testing.B) {
 //
 func BenchmarkUpdateReverse(b *testing.B) {
     out := bmInit
-    out.Update(bmInsertReversed.Reversed())
+    out.Update(bmInsertReversed.Backward())
 }
 
 
