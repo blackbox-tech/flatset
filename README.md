@@ -36,10 +36,10 @@ func main() {
 
     // insertion
     a := flatset.NewFlatSet[int](lessInt)
-    a.Insert(5)
-    a.Insert(6)
     a.Insert(8)
+    a.Insert(5)
     a.Insert(10)
+    a.Insert(6)
 
     // find and erase
     idx := a.Find(6)
@@ -50,8 +50,8 @@ func main() {
 
     // array intersection
     b := flatset.InitFlatSet[int]([]int{6, 8, 10}, lessInt)
-    c := a.Intersection(b.Values())
-    for value := range c.Values() {
+    c := a.Intersection(b.All())
+    for value := range c.All() {
         fmt.Printf("%d is in a and b\n", value)
     }
 }
