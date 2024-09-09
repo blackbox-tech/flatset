@@ -58,6 +58,13 @@ Create a new FlatSet and initialize it with some values. Values that are repeate
 
 ### Methods
 
+#### func (*FlatSet) Clear
+
+```go
+func (self *FlatSet) Clear()
+```
+Efficiently empty the set keeping any previously allocated memory for future insertions.
+
 #### func (*FlatSet) At
 
 ```go
@@ -241,6 +248,13 @@ func InitFlatMultiSet[V any](values []V, cmp Compare[V]) *FlatMultiSet[V]
 Create a new FlatMultiSet and initialize it with some values. The order of equivalent values will be maintained.
 
 ### Methods
+
+#### func (*FlatMultiSet) Clear
+
+```go
+func (self *FlatMultiSet) Clear()
+```
+Efficiently empty the set keeping any previously allocated memory for future insertions.
 
 #### func (*FlatMultiSet) At
 

@@ -135,6 +135,11 @@ func (self *base[V]) mergeSorted(other *base[V]) {
     self.data = data
 }
 
+// Efficiently empty the set keeping any previously allocated memory for future insertions.
+//
+func (self *base[V]) Clear() {
+    self.data = self.data[:0]
+}
 
 // Returns a copy of the value at the given index.
 //
